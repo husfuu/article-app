@@ -8,7 +8,7 @@
 docker compose up
 ```
 
-Load API Collection
+- Load API Collection: `sharing_div.postman_collection.json`
 
 ## Endpoint Backend
 | Ket                  | URL                              | Method |
