@@ -1,0 +1,36 @@
+version: '3'
+services:
+  # MySQL container
+  blog-db:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecretpassword
+      - MYSQL_USER=husfuu
+      - MYSQL_PASSWORD=mysecretpassword
+      - MYSQL_DATABASE=article_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql # Mount the folder with init scripts
+
+  # Golang application container
+  blog-app:
+    build:
+      context: ./backend # Path to the directory containing the Dockerfile
+    ports:
+      - "8080:8080" # Map the host's 8080 port to the container's 8080 port
+    restart: always
+    environment:
+      - DB_NAME=article_db
+      - DB_USER_DEV=husfuu
+      - DB_PASSWORD_DEV=mysecretpassword
+      - DB_PORT_DEV=3306
+      - DB_HOST=blog-db
+    depends_on:
+      - blog-db
+
+  blog-frontend:
+    build: ./dashboard
+    ports:
+      - 3000:3000
